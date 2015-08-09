@@ -12,7 +12,6 @@ public class Profile {
 	private Date created;
 
 	public Profile() {
-
 	}
 
 	public Profile(long id, String profileName, String firstName, String lastName) {
