@@ -10,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import net.anguslong.rest.model.Message;
@@ -23,21 +24,28 @@ public class MessageResource {
 	MessageService messageService = new MessageService();
 
 	@GET
-	public List<Message> getMessages() {
+	public List<Message> getMessages(
+			@QueryParam(value = "year") int year,
+			@QueryParam(value = "start") int start,
+			@QueryParam(value = "size") int size) {
+		if (year > 0) {
+			return messageService.getAllMessagesForYear(year);
+		}
+		if (start >= 0 && size >= 0) {
+			return messageService.getAllMessagesPaginated(start, size);
+		}
 		return messageService.getAllMessages();
 	}
 
 	@POST
 	public Message addMessage(Message message) {
 		return messageService.addMessage(message);
-
 	}
 
 	@DELETE
 	@Path("/{messageId}")
 	public void deleteMessage(@PathParam("messageId") long id) {
 		messageService.removeMessage(id);
-
 	}
 
 	@PUT
@@ -51,6 +59,5 @@ public class MessageResource {
 	@Path("/{messageId}")
 	Message getMessage(@PathParam("messageId") long messageId) {
 		return messageService.getMessage(messageId);
-
 	}
 }
